@@ -3,12 +3,13 @@
 from django.db import models
 import md5
 import random
-from dotpay.util import  STATUS_CHOICES,STATUS_CHOICES
+from dotpay.util import  STATUS_CHOICES,STATUS_CHOICES, generate_md5
 from dotpay.settings import DOTPIN,DOTID,DOTORDERMODEL
+from dotpay.signals import *
 
 class DotRequest(models.Model):
     id_request = models.AutoField(primary_key=True)
-    kwota = models.FloatField(help_text="Kwota transakcji  podana z częścią dziesiętną.")
+    kwota = models.DecimalField(max_digits=5, decimal_places=1, help_text="Kwota transakcji  podana z częścią dziesiętną.")
     opis = models.CharField(max_length=255,help_text="Opis przeprowadzanej transakcji. ")
     control = models.CharField(max_length=128,help_text="Parametr kontrolny",unique=True)
     email = models.EmailField()
@@ -31,7 +32,7 @@ class DotResponse(models.Model):
     status = models.CharField(max_length=2, choices=STATUS_CHOICES,help_text="Informacja o ewentualnym wystąpieniu błędów na stronach serwisu Dotpay")
     control = models.CharField(max_length=128,help_text="Parametr kontrolny jeżeli został podany podczas przekazywania kupującego na strony serwisu Dotpay")
     t_id = models.CharField(max_length=100,help_text="Numer  identyfikacyjny transakcji nadany po księgowaniu na koncie użytkownika Dotpay (Sprzedawcy).")
-    amount = models.FloatField(help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
+    amount = models.DecimalField(max_digits=5, decimal_places=1, help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
     orginal_amount = models.CharField(max_length=100,help_text="Kwota transakcji i znacznik waluty (oddzielone znakiem spacji). Separatorem dziesiętnym jest znak kropki")
     t_status = models.CharField(max_length=1,choices=STATUS_CHOICES)
     description = models.CharField(max_length=255,null=True,blank=True,help_text="Pełna treść opisu transakcji.")
@@ -41,48 +42,31 @@ class DotResponse(models.Model):
     
     def __unicode__(self):
         return u"%s - %s" % (self.request.opis,self.status)
-    
-    def load_request(self,request):
-        print request
-    
+
+    def _gen_md5(self):
+        return generate_md5(self.control, self.t_id, self.amount, self.request.email, self.t_status)
+
     def _check_md5(self):
-        list = []
-        #PIN:id:control:t_id:amount:email:service:code:username:password:t_status
-        
-        list.append(DOTPIN)
-        list.append(DOTID)
-        list.append(self.request.control)
-        list.append(self.t_id)
-        list.append(self.amount)
-        list.append(self.request.email)
-        list.append("") #service
-        list.append("") #code
-        list.append("") #username
-        list.append("") #password
-        list.append(self.t_status)
-        
-        if  md5.new(":".join(list)).hexdigest() == self.md5:
-            return True
-        else:
-            return False
-        
-        
+        return bool(self._gen_md5() == self.md5)
+    
     def save(self,*args, **kwargs):
         self.request = DotRequest.objects.get(control=self.control)
         if self._check_md5():
-            print "OKOKOK"
+
+            super(DotResponse, self).save(*args, **kwargs)
+            if self.t_status == '2': #WYKONANA
+                dot_wykonana.send(sender=self)
+            elif self.t_status == '1': #NOWA
+                dot_nowa.send(sender=self)
+            elif self.t_status == '3': #ODMOWA
+                dot_odmowa.send(sender=self)
+            elif self.t_status == '4': #ANULOWANA
+                dot_anulowana.send(sender=self)
+            elif self.t_status == '5': #REKLAMACJA
+                dot_reklamacja.send(sender=self)
+            else:
+                dot_error.send(sender=self)
+                raise BaseException("STATUS Not implemented:"+str(self.t_status))
         else:
-            print "FSDFSDFSD"
-            
-        super(DotResponse, self).save(*args, **kwargs)
-        if self.t_status == '2':
-            pass # send signal WYKONANA
-        elif self.t_status == '1':
-            pass # send signal NOWA
-        elif self.t_status == '3':
-            pass # send signal ODMOWA
-        elif self.t_status == '4':
-            pass # send signal ANULOWANA/ZWROT'
-        else:
-            pass #throw Execption
-            
+            dot_error.send(sender=self)
+            raise BaseException("MD5 INCORRECT: "+self.md5+" != "+self._gen_md5())

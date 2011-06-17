@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
 from django.db import models
 import md5
 import random
-from dotpay.util import  STATUS_CHOICES,STATUS_CHOICES, generate_md5
-from dotpay.settings import DOTPIN,DOTID,DOTORDERMODEL
+from dotpay.util import  TRANS_STATUS_CHOICES,STATUS_CHOICES, generate_md5
 from dotpay.signals import *
+import time
 
 class DotRequest(models.Model):
     id_request = models.AutoField(primary_key=True)
@@ -13,6 +12,7 @@ class DotRequest(models.Model):
     opis = models.CharField(max_length=255,help_text="Opis przeprowadzanej transakcji. ")
     control = models.CharField(max_length=128,help_text="Parametr kontrolny",unique=True)
     email = models.EmailField()
+    added = models.DateTimeField("Data zamówienia",auto_now_add=True,help_text="Data zamówienia")
     
     def __unicode__(self):
         return u"%s" % self.opis
@@ -22,14 +22,14 @@ class DotRequest(models.Model):
         super(DotRequest, self).save(*args, **kwargs)
     
     def _gen_control(self):
-        self.control = md5.new( str(self.kwota) + self.opis + str(random.randint(0,99999) ) ).hexdigest()
+        self.control = md5.new( str(self.kwota) + self.opis + str(random.randint(0,99999)) + str(time.time()) ).hexdigest()
 
 
 
 class DotResponse(models.Model):
     id_response = models.AutoField(primary_key=True)
     id = models.PositiveIntegerField(help_text="ID konta w systemie Dotpay, na rzecz którego dokonywana jest płatność (ID konta Sprzedawcy)")
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES,help_text="Informacja o ewentualnym wystąpieniu błędów na stronach serwisu Dotpay")
+    status = models.CharField(max_length=2, choices=TRANS_STATUS_CHOICES,help_text="Informacja o ewentualnym wystąpieniu błędów na stronach serwisu Dotpay")
     control = models.CharField(max_length=128,help_text="Parametr kontrolny jeżeli został podany podczas przekazywania kupującego na strony serwisu Dotpay")
     t_id = models.CharField(max_length=100,help_text="Numer  identyfikacyjny transakcji nadany po księgowaniu na koncie użytkownika Dotpay (Sprzedawcy).")
     amount = models.DecimalField(max_digits=5, decimal_places=1, help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
@@ -37,7 +37,7 @@ class DotResponse(models.Model):
     t_status = models.CharField(max_length=1,choices=STATUS_CHOICES)
     description = models.CharField(max_length=255,null=True,blank=True,help_text="Pełna treść opisu transakcji.")
     md5 = models.CharField(max_length=32)    
-    t_date = models.DateTimeField(null=True,blank=True,help_text="Data realizacji transakcji")
+    t_date = models.DateTimeField(null=True,blank=True,help_text="Data otrzymania komunikatu")
     request = models.ForeignKey(DotRequest,help_text="FK dla requestu")
     
     def __unicode__(self):
@@ -69,4 +69,4 @@ class DotResponse(models.Model):
                 raise BaseException("STATUS Not implemented:"+str(self.t_status))
         else:
             dot_error.send(sender=self)
-            raise BaseException("MD5 INCORRECT: "+self.md5+" != "+self._gen_md5())
+            raise BaseException("MD5 INCORRECT: "+self.md5)#+" != "+self._gen_md5())

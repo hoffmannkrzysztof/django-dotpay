@@ -1,14 +1,23 @@
 from django.forms import ModelForm,IntegerField,URLField,CharField
 from dotpay.models import DotRequest
 from dotpay.settings import DOTID,DOTURL,DOTURLC,DOTTXTGUZIK
+from django.forms.fields import HiddenInput
 
 class DotRequestForm(ModelForm):
-        id = IntegerField(initial=DOTID)
-        URL = URLField(initial=DOTURL)
-        typ = IntegerField(initial=0)
-        txtguzik = CharField(initial=DOTTXTGUZIK)
-        URLC = URLField(initial=DOTURLC)
+        id = IntegerField(initial=DOTID,widget=HiddenInput)
+        URL = URLField(initial=DOTURL,widget=HiddenInput)
+        typ = IntegerField(initial=0,widget=HiddenInput)
+        txtguzik = CharField(initial=DOTTXTGUZIK,widget=HiddenInput)
+        URLC = URLField(initial=DOTURLC,widget=HiddenInput)
+        lang = CharField(max_length=2,initial='pl',widget=HiddenInput)
+        kraj = CharField(max_length=3,initial='POL',widget=HiddenInput)
         
     
         class Meta:
             model = DotRequest
+            widgets = {
+            'kwota' : HiddenInput,
+            'opis' : HiddenInput,
+            'control' : HiddenInput,
+            'email' : HiddenInput,
+            }

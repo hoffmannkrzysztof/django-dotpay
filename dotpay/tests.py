@@ -61,28 +61,24 @@ class DotPayTest(unittest.TestCase):
         self.assertEqual(response.status_code, 403,"CODE: "+str(response.status_code))
         
     def testResponses(self):
-        global signal_count
-        signal_start = signal_count
-        
         for stat in STATUS_CHOICES:
             request = self._post(1,stat[0])
             response = receiver(request)  
             self.assertEqual(response.status_code, 200,"CODE: "+str(response.status_code)+" Typ: "+stat[1])
         self.assertEqual(len(DotResponse.objects.filter(control=self.control)),len(STATUS_CHOICES))
-        self.assertEqual(len(STATUS_CHOICES)+signal_start,signal_count)
-    
         
-    
-    def testFakeResponses(self):
         global signal_count
-        signal_start = signal_count
+        self.assertEqual(len(STATUS_CHOICES),signal_count)
+        signal_count = 0
+    
         
+    
+    def testFakeResponses(self):     
         for stat in STATUS_CHOICES:
             request = self._post(1,stat[0],True)
             response = receiver(request)  
             self.assertEqual(response.status_code, 500,"CODE: "+str(response.status_code)+" Typ: "+stat[1])
-        self.assertEqual(len(STATUS_CHOICES)+signal_start,signal_count)
-        
+
 @dispatch.receiver(dot_anulowana)
 @dispatch.receiver(dot_odmowa)
 @dispatch.receiver(dot_nowa)        

@@ -1,12 +1,11 @@
 import md5
 from dotpay.settings import DOTID,DOTPIN
 
-"""
-STATUS_CHOICES = (
+
+TRANS_STATUS_CHOICES = (
 ('OK','OK'),
 ('FAIL','FAIL')   
 )
-"""
 
 STATUS_CHOICES = (
 ('1','NOWA'),
@@ -16,7 +15,7 @@ STATUS_CHOICES = (
 ('5','REKLAMACJA'),                                     
 )
 
-DOTPAY_SERVERS = [ '217.17.41.5', '195.150.9.3']
+DOTPAY_SERVERS = [ '195.150.9.37']
 
 
 def generate_md5(control,t_id,amount,email,t_status):

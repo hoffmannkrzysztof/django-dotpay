@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.utils import unittest
-from dotpay.models import DotResponse, DotRequest
+from dotpay.payment.models import DotResponse, DotRequest
 from dotpay.settings import DOTID
 from datetime import datetime
 from django.test.client import RequestFactory
 
-from dotpay.util import generate_md5,STATUS_CHOICES, DOTPAY_SERVERS
-from dotpay.views import receiver
-from dotpay.signals import dot_wykonana, dot_anulowana, dot_odmowa, dot_nowa,\
+from dotpay.payment.util import generate_md5,STATUS_CHOICES, DOTPAY_SERVERS
+from dotpay.payment.views import receiver
+from dotpay.payment.signals import dot_wykonana, dot_anulowana, dot_odmowa, dot_nowa,\
     dot_reklamacja
 from django import dispatch
 

@@ -5,7 +5,7 @@ setup(
     version = '0.1',
     author = 'Krzysztof Hoffmann',
     author_email = 'krzysiekpl@gmail.com',
-    url = 'http://hoffmannkrzysztof.pl/',
+    url = 'https://django-dotpay.googlecode.com/svn/trunk/',
     packages = ['dotpay',],
     zip_safe = False,
     install_requires = ['django',],

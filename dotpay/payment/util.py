@@ -1,5 +1,6 @@
 import md5
-from dotpay.settings import DOTID,DOTPIN
+from dotpay.settings import DOTID
+from dotpay.payment.settings import DOTPIN
 
 
 TRANS_STATUS_CHOICES = (

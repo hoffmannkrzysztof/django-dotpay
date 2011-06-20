@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
-from dotpay.models import DotResponse
+from dotpay.payment.models import DotResponse
 from django.http import HttpResponse
-from dotpay.util import DOTPAY_SERVERS
+from dotpay.payment.util import DOTPAY_SERVERS
 
 @csrf_exempt    
 def receiver(request):

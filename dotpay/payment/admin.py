@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dotpay.models import DotRequest,DotResponse
+from dotpay.payment.models import DotRequest,DotResponse
 
 class DotResponseInline(admin.StackedInline):
     model = DotResponse

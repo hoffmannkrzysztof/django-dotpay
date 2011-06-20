@@ -5,20 +5,3 @@ try:
     DOTID = getattr(settings, 'DOTID')
 except AttributeError:
     raise BaseException("DOTID wymagany")
-
-try:
-    DOTPIN = getattr(settings, 'DOTPIN')
-except AttributeError:
-    raise BaseException("DOTPIN wymagany")
-
-try:
-    DOTURL  = getattr(settings, 'DOTURL')
-except AttributeError:
-    raise BaseException("DOTURL wymagany")
-
-try:
-    DOTURLC  = getattr(settings, 'DOTURLC')
-except AttributeError:
-    raise BaseException("DOTURLC wymagany")
-
-DOTTXTGUZIK  = getattr(settings, 'DOTTXTGUZIK', 'Powrót do sklepu')

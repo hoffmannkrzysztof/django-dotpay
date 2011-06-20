@@ -2,8 +2,8 @@
 from django.db import models
 import md5
 import random
-from dotpay.util import  TRANS_STATUS_CHOICES,STATUS_CHOICES, generate_md5
-from dotpay.signals import *
+from dotpay.payment.util import  TRANS_STATUS_CHOICES,STATUS_CHOICES, generate_md5
+from dotpay.payment.signals import dot_anulowana,dot_error,dot_nowa,dot_odmowa,dot_reklamacja,dot_wykonana
 import time
 
 class DotRequest(models.Model):
@@ -13,6 +13,10 @@ class DotRequest(models.Model):
     control = models.CharField(max_length=128,help_text="Parametr kontrolny",unique=True)
     email = models.EmailField()
     added = models.DateTimeField("Data zamówienia",auto_now_add=True,help_text="Data zamówienia")
+    
+    class Meta:
+        verbose_name = 'Dotpay akcja'
+        verbose_name_plural = 'Dotpay akcje'
     
     def __unicode__(self):
         return u"%s" % self.opis
@@ -39,6 +43,10 @@ class DotResponse(models.Model):
     md5 = models.CharField(max_length=32)    
     t_date = models.DateTimeField(null=True,blank=True,help_text="Data otrzymania komunikatu")
     request = models.ForeignKey(DotRequest,help_text="FK dla requestu")
+    
+    class Meta:
+        verbose_name = 'Dotpay odpowiedź'
+        verbose_name_plural = 'Dotpay odpowiedzi'
     
     def __unicode__(self):
         return u"%s - %s" % (self.request.opis,self.status)

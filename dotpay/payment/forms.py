@@ -1,6 +1,7 @@
 from django.forms import ModelForm,IntegerField,URLField,CharField
-from dotpay.models import DotRequest
-from dotpay.settings import DOTID,DOTURL,DOTURLC,DOTTXTGUZIK
+from dotpay.payment.models import DotRequest
+from dotpay.payment.settings import DOTURL,DOTURLC,DOTTXTGUZIK
+from dotpay.settings import DOTID
 from django.forms.fields import HiddenInput
 
 class DotRequestForm(ModelForm):

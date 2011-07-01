@@ -24,6 +24,13 @@ class DotRequest(models.Model):
     def save(self,*args, **kwargs):
         self._gen_control()
         super(DotRequest, self).save(*args, **kwargs)
+        
+    def get_status(self):
+        if self.dotresponse_set.count() > 0:
+            status = self.dotresponse_set.order_by("-t_status").all()[0]
+            return status.get_t_status_display()
+        else:
+            return u"Nowa"
     
     def _gen_control(self):
         self.control = md5.new( str(self.kwota) + self.opis + str(random.randint(0,99999)) + str(time.time()) ).hexdigest()

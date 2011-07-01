@@ -8,15 +8,15 @@ import time
 
 class DotRequest(models.Model):
     id_request = models.AutoField(primary_key=True)
-    kwota = models.DecimalField(max_digits=5, decimal_places=1, help_text="Kwota transakcji  podana z częścią dziesiętną.")
-    opis = models.CharField(max_length=255,help_text="Opis przeprowadzanej transakcji. ")
-    control = models.CharField(max_length=128,help_text="Parametr kontrolny",unique=True)
+    kwota = models.DecimalField(max_digits=5, decimal_places=1, help_text=u"Kwota transakcji  podana z częścią dziesiętną.")
+    opis = models.CharField(max_length=255,help_text=u"Opis przeprowadzanej transakcji. ")
+    control = models.CharField(max_length=128,help_text=u"Parametr kontrolny",unique=True)
     email = models.EmailField()
-    added = models.DateTimeField("Data zamówienia",auto_now_add=True,help_text="Data zamówienia")
+    added = models.DateTimeField(u"Data zamówienia",auto_now_add=True,help_text="Data zamówienia")
     
     class Meta:
-        verbose_name = 'Dotpay akcja'
-        verbose_name_plural = 'Dotpay akcje'
+        verbose_name = u'Dotpay akcja'
+        verbose_name_plural = u'Dotpay akcje'
     
     def __unicode__(self):
         return u"%s" % self.opis
@@ -52,8 +52,8 @@ class DotResponse(models.Model):
     request = models.ForeignKey(DotRequest,help_text="FK dla requestu")
     
     class Meta:
-        verbose_name = 'Dotpay odpowiedź'
-        verbose_name_plural = 'Dotpay odpowiedzi'
+        verbose_name = u'Dotpay odpowiedź'
+        verbose_name_plural = u'Dotpay odpowiedzi'
     
     def __unicode__(self):
         return u"%s - %s" % (self.request.opis,self.status)

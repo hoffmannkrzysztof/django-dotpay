@@ -19,7 +19,7 @@ class DotPayTest(unittest.TestCase):
     def setUp(self):
         
         self.param = {}
-        self.param['kwota'] = 24.33
+        self.param['kwota'] = str(24.33)
         self.param['opis'] = 'Testowe zamówienie #1'
         self.param['email'] = 'krzysiekpl@gmail.com'
         self.param['t_id'] = 'TST-20102'

@@ -5,8 +5,9 @@ setup(
     version = '0.2',
     author = 'Krzysztof Hoffmann',
     author_email = 'krzysiekpl@gmail.com',
-    url = 'https://django-dotpay.googlecode.com/svn/trunk/',
+    license='BSD',
+    url = 'https://github.com/krzysiekpl/django-dotpay/',
     packages = ['dotpay','dotpay.sms','dotpay.payment'],
-    zip_safe = False,
+    zip_safe = True,
     install_requires = ['django',],
-    license = 'MIT')
+    )

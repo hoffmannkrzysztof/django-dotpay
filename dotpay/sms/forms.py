@@ -15,7 +15,10 @@ class DotSMSCheckForm(ModelForm):
     def clean(self):
         
         cleaned_data = self.cleaned_data
-        code = cleaned_data.get("code")
+        try:
+            code = cleaned_data.get("code")
+        except KeyError:
+            return cleaned_data
         
         page = urlopen("http://dotpay.pl/check_code_fullinfo.php?id=%s&code=%s&type=sms&del=0&check=%s" %(DOTID,DOTSMSID,code) ).read()
         page_split = page.split('\n')

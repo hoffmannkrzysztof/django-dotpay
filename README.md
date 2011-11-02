@@ -7,6 +7,11 @@ WYMAGANIA
 Django 1.3 ( nie testowana na starych wersjach )
 Konto DOTPAY
 
+WIKI
+-------
+https://github.com/krzysiekpl/django-dotpay/wiki
+
+
 ZMIANY
 -------
 

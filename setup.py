@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
     
 setup(
     name = 'django-dotpay',
-    version = '0.2.4',
+    version = '0.2.5',
     author = 'Krzysztof Hoffmann',
     author_email = 'krzysiekpl@gmail.com',
     license='BSD',

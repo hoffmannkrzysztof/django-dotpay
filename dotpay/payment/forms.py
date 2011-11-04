@@ -5,7 +5,7 @@ from dotpay.settings import DOTID
 from django.forms.fields import HiddenInput
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
-from urlparse import urljoin
+from urlparse import urljoin, urlparse
 
 
 class DotRequestForm(ModelForm):
@@ -28,10 +28,8 @@ class DotRequestForm(ModelForm):
             }
             
         def __init__(self, *args, **kwargs):
-            if Site.objects.get_current().domain.startswith("http://"):
-                domain = Site.objects.get_current().domain
-            else:
-                domain = "http://"+Site.objects.get_current().domain
-            URLC = urljoin(domain,reverse('dotpay_receiver'))
+                
+            domain = urlparse(Site.objects.get_current().domain).netloc                
+            URLC = urljoin("http://"+domain,reverse('dotpay_receiver'))
             kwargs['initial'] = {'URLC': URLC}
             super(DotRequestForm, self).__init__(*args, **kwargs)

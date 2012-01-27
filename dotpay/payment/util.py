@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import md5
 from dotpay.settings import DOTID
 from dotpay.payment.settings import DOTPIN
@@ -19,7 +20,7 @@ STATUS_CHOICES = (
 DOTPAY_SERVERS = [ '195.150.9.37']
 
 
-def generate_md5(control,t_id,amount,email,t_status):
+def generate_md5(control,t_id,amount,t_status):
     list = []
     #PIN:id:control:t_id:amount:email:service:code:username:password:t_status
     
@@ -28,7 +29,7 @@ def generate_md5(control,t_id,amount,email,t_status):
     list.append(control)
     list.append(t_id)
     list.append(amount)
-    list.append(email)
+    list.append("") #email
     list.append("") #service
     list.append("") #code
     list.append("") #username

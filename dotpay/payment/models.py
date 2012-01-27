@@ -59,7 +59,7 @@ class DotResponse(models.Model):
         return u"%s - %s" % (self.request.opis,self.status)
 
     def _gen_md5(self):
-        return generate_md5(self.control, self.t_id, self.amount, self.request.email, self.t_status)
+        return generate_md5(self.control, self.t_id, self.amount, self.t_status)
 
     def _check_md5(self):
         return bool(self._gen_md5() == self.md5)

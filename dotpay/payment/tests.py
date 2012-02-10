@@ -34,18 +34,24 @@ class DotPayTest(unittest.TestCase):
     
         
         
-    def _post(self,status,t_status,fake=False):
+    def _post(self,status,t_status,fake=False,user_changed_email=False):
         control = self.control
         if fake:
             control += 'fake'
+
+        if user_changed_email:
+            email = 'sfdjkgfk@gf.pl'
+        else:
+            email = self.param['email']
             
-        md5 = generate_md5(control,self.param['t_id'],self.param['kwota'],self.param['email'],t_status)
+        md5 = generate_md5(control,self.param['t_id'],self.param['kwota'],t_status,email    )
         request = self.req.post('/dotpay/receiver/', {'id': DOTID,
                                      'status':status,
                                      'control':self.control,
                                      't_id':self.param['t_id'],
                                      'amount': self.param['kwota'],
                                      'orginal_amount': self.param['kwota'],
+                                     'email': email,
                                      't_status':t_status,
                                      'description':self.param['opis'],
                                      'md5':md5,
@@ -67,6 +73,18 @@ class DotPayTest(unittest.TestCase):
             self.assertEqual(response.status_code, 200,"CODE: "+str(response.status_code)+" Typ: "+stat[1])
         self.assertEqual(len(DotResponse.objects.filter(control=self.control)),len(STATUS_CHOICES))
         
+        global signal_count
+        self.assertEqual(len(STATUS_CHOICES),signal_count)
+        signal_count = 0
+
+
+    def testResponseswithchangedemail(self):
+        for stat in STATUS_CHOICES:
+            request = self._post(1,stat[0],False,True)
+            response = receiver(request)
+            self.assertEqual(response.status_code, 200,"CODE: "+str(response.status_code)+" Typ: "+stat[1])
+        self.assertEqual(len(DotResponse.objects.filter(control=self.control)),len(STATUS_CHOICES))
+
         global signal_count
         self.assertEqual(len(STATUS_CHOICES),signal_count)
         signal_count = 0

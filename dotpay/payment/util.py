@@ -17,10 +17,10 @@ STATUS_CHOICES = (
 ('5','REKLAMACJA'),                                     
 )
 
-DOTPAY_SERVERS = [ '195.150.9.37']
+DOTPAY_SERVERS = ['195.150.9.37']
 
 
-def generate_md5(control,t_id,amount,t_status):
+def generate_md5(control,t_id,amount,t_status, email):
     list = []
     #PIN:id:control:t_id:amount:email:service:code:username:password:t_status
     
@@ -29,7 +29,7 @@ def generate_md5(control,t_id,amount,t_status):
     list.append(control)
     list.append(t_id)
     list.append(amount)
-    list.append("") #email
+    list.append(email) #email
     list.append("") #service
     list.append("") #code
     list.append("") #username

@@ -45,6 +45,7 @@ class DotResponse(models.Model):
     t_id = models.CharField(max_length=100,help_text="Numer  identyfikacyjny transakcji nadany po księgowaniu na koncie użytkownika Dotpay (Sprzedawcy).")
     amount = models.DecimalField(max_digits=5, decimal_places=1, help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
     orginal_amount = models.CharField(max_length=100,help_text="Kwota transakcji i znacznik waluty (oddzielone znakiem spacji). Separatorem dziesiętnym jest znak kropki")
+    email = models.CharField(max_length=100,help_text="Adres email osoby dokonującej płatność.")
     t_status = models.CharField(max_length=1,choices=STATUS_CHOICES)
     description = models.CharField(max_length=255,null=True,blank=True,help_text="Pełna treść opisu transakcji.")
     md5 = models.CharField(max_length=32)    
@@ -59,7 +60,7 @@ class DotResponse(models.Model):
         return u"%s - %s" % (self.request.opis,self.status)
 
     def _gen_md5(self):
-        return generate_md5(self.control, self.t_id, self.amount, self.t_status)
+        return generate_md5(self.control, self.t_id, self.amount, self.t_status, self.email)
 
     def _check_md5(self):
         return bool(self._gen_md5() == self.md5)

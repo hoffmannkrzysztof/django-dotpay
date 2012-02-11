@@ -13,7 +13,7 @@ class DotRequestForm(ModelForm):
         URL = URLField(initial=DOTURL,widget=HiddenInput)
         typ = IntegerField(initial=0,widget=HiddenInput)
         txtguzik = CharField(initial=DOTTXTGUZIK,widget=HiddenInput)
-        URLC = URLField(widget=HiddenInput)
+        URLC = URLField(initial=DOTURLC,widget=HiddenInput)
         lang = CharField(max_length=2,initial='pl',widget=HiddenInput)
         kraj = CharField(max_length=3,initial='POL',widget=HiddenInput)
         
@@ -26,10 +26,3 @@ class DotRequestForm(ModelForm):
             'control' : HiddenInput,
             'email' : HiddenInput,
             }
-            
-        def __init__(self, *args, **kwargs):
-                
-            domain = urlparse(Site.objects.get_current().domain).netloc                
-            URLC = urljoin("http://"+domain,reverse('dotpay_receiver'))
-            kwargs['initial'] = {'URLC': URLC}
-            super(DotRequestForm, self).__init__(*args, **kwargs)

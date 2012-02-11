@@ -43,11 +43,7 @@ class DotResponse(models.Model):
     status = models.CharField(max_length=4, choices=TRANS_STATUS_CHOICES,help_text="Informacja o ewentualnym wystąpieniu błędów na stronach serwisu Dotpay")
     control = models.CharField(max_length=128,help_text="Parametr kontrolny jeżeli został podany podczas przekazywania kupującego na strony serwisu Dotpay")
     t_id = models.CharField(max_length=100,help_text="Numer  identyfikacyjny transakcji nadany po księgowaniu na koncie użytkownika Dotpay (Sprzedawcy).")
-<<<<<<< HEAD
     amount = models.DecimalField(max_digits=5, decimal_places=2, help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
-=======
-    amount = models.DecimalField(max_digits=5, decimal_places=2 help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
->>>>>>> 435417d82f1b4381689c620e1d9ff50b6cfa4e92
     orginal_amount = models.CharField(max_length=100,help_text="Kwota transakcji i znacznik waluty (oddzielone znakiem spacji). Separatorem dziesiętnym jest znak kropki")
     email = models.CharField(max_length=100,help_text="Adres email osoby dokonującej płatność.")
     t_status = models.CharField(max_length=1,choices=STATUS_CHOICES)

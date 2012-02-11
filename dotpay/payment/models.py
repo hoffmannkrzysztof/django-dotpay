@@ -8,7 +8,7 @@ import time
 
 class DotRequest(models.Model):
     id_request = models.AutoField(primary_key=True)
-    kwota = models.DecimalField(max_digits=5, decimal_places=1, help_text=u"Kwota transakcji  podana z częścią dziesiętną.")
+    kwota = models.DecimalField(max_digits=5, decimal_places=2, help_text=u"Kwota transakcji  podana z częścią setną.")
     opis = models.CharField(max_length=255,help_text=u"Opis przeprowadzanej transakcji. ")
     control = models.CharField(max_length=128,help_text=u"Parametr kontrolny",unique=True)
     email = models.EmailField()
@@ -43,7 +43,7 @@ class DotResponse(models.Model):
     status = models.CharField(max_length=4, choices=TRANS_STATUS_CHOICES,help_text="Informacja o ewentualnym wystąpieniu błędów na stronach serwisu Dotpay")
     control = models.CharField(max_length=128,help_text="Parametr kontrolny jeżeli został podany podczas przekazywania kupującego na strony serwisu Dotpay")
     t_id = models.CharField(max_length=100,help_text="Numer  identyfikacyjny transakcji nadany po księgowaniu na koncie użytkownika Dotpay (Sprzedawcy).")
-    amount = models.DecimalField(max_digits=5, decimal_places=1, help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
+    amount = models.DecimalField(max_digits=5, decimal_places=2 help_text="Kwota transakcji. Separatorem dziesiętnym jest znak kropki.")
     orginal_amount = models.CharField(max_length=100,help_text="Kwota transakcji i znacznik waluty (oddzielone znakiem spacji). Separatorem dziesiętnym jest znak kropki")
     email = models.CharField(max_length=100,help_text="Adres email osoby dokonującej płatność.")
     t_status = models.CharField(max_length=1,choices=STATUS_CHOICES)

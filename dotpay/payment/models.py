@@ -49,7 +49,7 @@ class DotResponse(models.Model):
     t_status = models.CharField(max_length=1,choices=STATUS_CHOICES)
     description = models.CharField(max_length=255,null=True,blank=True,help_text="Pełna treść opisu transakcji.")
     md5 = models.CharField(max_length=32)    
-    t_date = models.DateTimeField(null=True,blank=True,help_text="Data otrzymania komunikatu")
+    t_date = models.DateTimeField(auto_now_add=True,help_text="Data otrzymania komunikatu")
     request = models.ForeignKey(DotRequest,help_text="FK dla requestu")
     
     class Meta:

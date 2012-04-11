@@ -1,0 +1,4 @@
+settingsdev.py
+sqlite.db
+*.pyc
+logs/

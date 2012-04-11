@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<h1>Checking sms code</h1>
+
+<small>This page should cointans text input and single submit button.</small>
+
+{%  if price %}
+<h3>Value: {{ price }}</h3>
+<small>For testing sms codes always return 0.00</small>
+{% endif %}
+
+
+<form method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" />
+</form>
+
+</body>
+</html>

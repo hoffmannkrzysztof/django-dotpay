@@ -10,7 +10,7 @@ Konto DOTPAY
 
 WIKI
 -------
-https://github.com/krzysiekpl/django-dotpay/wiki
+https://github.com/hoffmannkrzysztof/django-dotpay/wiki
 
 
 ZMIANY

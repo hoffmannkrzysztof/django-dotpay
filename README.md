@@ -5,6 +5,7 @@ Obsługa bramki płatności serwisu dotpay.pl dla Django
 WYMAGANIA
 -------
 Django 1.3 ( nie testowana na starych wersjach )
+
 Konto DOTPAY
 
 WIKI

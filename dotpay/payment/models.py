@@ -85,4 +85,4 @@ class DotResponse(models.Model):
                 raise BaseException("STATUS Not implemented:"+str(self.t_status))
         else:
             dot_error.send(sender=self)
-            raise BaseException("MD5 INCORRECT: "+self.md5)#+" != "+self._gen_md5())
+            raise BaseException("MD5 INCORRECT. id_response: %d id: %d" % self.id_response,self.id)

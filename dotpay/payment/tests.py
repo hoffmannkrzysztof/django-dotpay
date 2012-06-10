@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.utils import unittest
+from django import test
 from dotpay.payment.models import DotResponse, DotRequest
 from dotpay.settings import DOTID
 from datetime import datetime
@@ -16,9 +16,8 @@ from django.core.urlresolvers import reverse
 signal_count = 0
 
 
-class DotPayTest(unittest.TestCase):
-    def setUp(self):
-
+class DotPayTest(test.TestCase):
+    def create_request(self):
         self.param = {}
         self.param['kwota'] = str(24.33)
         self.param['opis'] = 'Testowe zamówienie #1'
@@ -30,15 +29,19 @@ class DotPayTest(unittest.TestCase):
                                   email=self.param['email'])
         dotrequest.save(force_insert=True)
         self.control = dotrequest.control #zapamiętujemy wygenerowany control
+        self.request = dotrequest
+    def setUp(self):
         self.req = RequestFactory()
 
 
 
 
     def _post(self, status, t_status, fake=False, user_changed_email=False):
+        self.create_request()
         control = self.control
         if fake:
             control += 'fake'
+
 
         if user_changed_email:
             email = 'sfdjkgfk@gf.pl'
@@ -72,7 +75,7 @@ class DotPayTest(unittest.TestCase):
             request = self._post(1, stat[0])
             response = receiver(request)
             self.assertEqual(response.status_code, 200, "CODE: " + str(response.status_code) + " Typ: " + stat[1])
-        self.assertEqual(len(DotResponse.objects.filter(control=self.control)), len(STATUS_CHOICES))
+        self.assertEqual(DotResponse.objects.count(), len(STATUS_CHOICES))
 
         global signal_count
         self.assertEqual(len(STATUS_CHOICES), signal_count)
@@ -84,7 +87,7 @@ class DotPayTest(unittest.TestCase):
             request = self._post(1, stat[0], False, True)
             response = receiver(request)
             self.assertEqual(response.status_code, 200, "CODE: " + str(response.status_code) + " Typ: " + stat[1])
-        self.assertEqual(len(DotResponse.objects.filter(control=self.control)), len(STATUS_CHOICES))
+        self.assertEqual(DotResponse.objects.count(), len(STATUS_CHOICES))
 
         global signal_count
         self.assertEqual(len(STATUS_CHOICES), signal_count)
@@ -97,6 +100,19 @@ class DotPayTest(unittest.TestCase):
             request = self._post(1, stat[0], True)
             response = receiver(request)
             self.assertEqual(response.status_code, 500, "CODE: " + str(response.status_code) + " Typ: " + stat[1])
+
+    def testMultipleResponseToSingleRequest(self):
+        request = self._post(1, 1)
+        response = receiver(request)
+        self.assertEqual(response.status_code, 200, "First transaction should success.")
+        self.assertEqual(DotResponse.objects.count(), 1)
+        response = receiver(request)
+        self.assertEqual(response.status_code, 200, "Second transaction should success.")
+        self.assertEqual(DotResponse.objects.count(), 1, "Secent transaction should not create response.")
+
+        global signal_count
+        self.assertEqual(1, signal_count)
+        signal_count = 0
 
 @dispatch.receiver(dot_anulowana)
 @dispatch.receiver(dot_odmowa)

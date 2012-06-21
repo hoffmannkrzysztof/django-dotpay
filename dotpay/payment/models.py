@@ -55,7 +55,7 @@ class DotResponse(models.Model):
     class Meta:
         verbose_name = u'Dotpay odpowiedź'
         verbose_name_plural = u'Dotpay odpowiedzi'
-        unique_together = ('t_id', 'control')
+        unique_together = (('t_id', 'control'),)
     
     def __unicode__(self):
         return u"%s - %s" % (self.request.opis,self.status)

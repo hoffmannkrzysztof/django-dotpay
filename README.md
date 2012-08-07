@@ -1,10 +1,11 @@
 DJANGO-DOTPAY
 ========
 Obsługa bramki płatności serwisu dotpay.pl dla Django
+Używana w serwisie produkcyjnym.
 
 WYMAGANIA
 -------
-Django 1.3 ( nie testowana na starych wersjach )
+Django 1.3 / 1.4 ( nie testowana na starych wersjach )
 
 Konto DOTPAY
 

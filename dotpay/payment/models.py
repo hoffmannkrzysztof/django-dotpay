@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from django.db import models
 import hashlib
 import random
@@ -33,8 +34,8 @@ class DotRequest(models.Model):
             return u"Nowa"
     
     def _gen_control(self):
-        self.control = hashlib.md5( str(self.kwota) + self.opis + str(random.randint(0,99999)) + str(time.time()) ).hexdigest()
-
+        nonce = ''.join([str(self.kwota), str(time.time()), os.urandom(1024)])
+        self.control = hashlib.md5(nonce).hexdigest()
 
 
 class DotResponse(models.Model):

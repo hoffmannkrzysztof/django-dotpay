@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import md5
+import hashlib
 from dotpay.settings import DOTID
 from dotpay.payment.settings import DOTPIN
 
@@ -38,4 +38,4 @@ def generate_md5(control,t_id,amount,t_status, email):
     
     list = map(lambda o: str(o), list)
     
-    return md5.new(":".join(list)).hexdigest()
+    return hashlib.md5(":".join(list)).hexdigest()

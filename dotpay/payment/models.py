@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+import os
 from django.db import models
-import md5
+import hashlib
 import random
 from dotpay.payment.util import  TRANS_STATUS_CHOICES,STATUS_CHOICES, generate_md5
 from dotpay.payment.signals import dot_anulowana,dot_error,dot_nowa,dot_odmowa,dot_reklamacja,dot_wykonana
@@ -33,8 +34,8 @@ class DotRequest(models.Model):
             return u"Nowa"
     
     def _gen_control(self):
-        self.control = md5.new( str(self.kwota) + self.opis + str(random.randint(0,99999)) + str(time.time()) ).hexdigest()
-
+        nonce = ''.join([str(self.kwota), str(time.time()), os.urandom(1024)])
+        self.control = hashlib.md5(nonce).hexdigest()
 
 
 class DotResponse(models.Model):
